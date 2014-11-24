@@ -88,7 +88,17 @@ class Bhf::EntriesController < Bhf::ApplicationController
     
     head :ok
   end
+  def embed_sort
+    relation = params[:relation]
+    reflection = @object.send relation.to_sym
+    params[:order].each do |order|
+      obj_id = order[1].gsub("_#{@platform.name}", '')
+      ob = reflection.find(obj_id)
+      ob.update_attribute(@platform.sortable_property, order[0].to_i)
+    end
 
+    head :ok
+  end
   def destroy
     @object.destroy
     if @quick_edit

@@ -364,6 +364,7 @@ Turbolinks.pagesCached(0);
 				clone: true,
 				revert: true,
 				handle: false,
+				opacity: 0.6,
 				onStart: function(element){
 					element.addClass('dragged');
 				},
