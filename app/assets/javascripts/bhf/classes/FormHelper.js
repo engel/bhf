@@ -13,7 +13,7 @@ var FormHelper = new Class({
 		// this.setOptions(_options);
 		var scope = _object;
 		
-		scope.getElements('.wysiwyg').each(function(elem){
+		scope.getElements('textarea.wysiwyg').each(function(elem){
 			this.wysiwyg.push(elem.mooEditable());
 		}.bind(this));
 
