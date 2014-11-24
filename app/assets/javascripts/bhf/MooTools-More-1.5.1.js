@@ -1372,10 +1372,10 @@ var Sortables = new Class({
 		position.x += scroll.offsetParent.x;
 		position.y += scroll.offsetParent.y;
 
-		if (offsetParent.getStyle('position') == 'fixed'){
+		//if (offsetParent.getStyle('position') == 'fixed'){
 			position.x -= scroll.w.x;
 			position.y -= scroll.w.y;
-		}
+		//}
 
         return position;
 	},
