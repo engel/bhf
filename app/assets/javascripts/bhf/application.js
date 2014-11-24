@@ -1,6 +1,6 @@
 //= require turbolinks
-//= require ./mootools-core-1.5.0-full-compat.js
-//= require ./mootools-more-1.5.0.js
+//= require ./MooTools-Core-1.5.1-compat.js
+//= require ./MooTools-More-1.5.1.js
 //= require ./mootools_ujs
 //= require_tree ./locales/
 //= require_tree ./classes/
@@ -105,7 +105,7 @@ Turbolinks.pagesCached(0);
 		}
 		if (eventNames.contains('successAndChange')) {
 			if (entry) {
-				entry.innerHTML = parsedTemplate;
+				entry.outerHTML = parsedTemplate;
 			}
 		}
 		if (eventNames.contains('successAndRemove')) {
@@ -116,6 +116,8 @@ Turbolinks.pagesCached(0);
 				newEntryInjectArea.fireEvent('quickEditEntryRemoved');
 			}
 		}
+		var embed_manies = parent.getElements('.sortable');
+		//addSortables(embed_manies)
 	};
 		
 	var scrollContent = function(){
@@ -318,10 +320,14 @@ Turbolinks.pagesCached(0);
 						method: 'put',
 						url: sortableElems.get('data-sort-url')
 					}).send({data: {order: this.serialize()}});
-				}
+				},
+				clone: true
 			});
 		});
-		
+		var embed_manies = mainScope.getElements('.sortable');
+		addSortables(embed_manies)
+
+
 		var fm = document.id('flash_massages');
 		if (fm) {
 			fm.removeClass.delay(10000, fm, 'show');
@@ -352,8 +358,27 @@ Turbolinks.pagesCached(0);
 		
 		ajaxNote.success();
 	});
-
-
+    var addSortables = function(sortables,scope) {
+		sortables.each(function(embed_many, index){
+			var s= new Sortables(embed_many, {
+				clone: true,
+				revert: true,
+				handle: false,
+				onStart: function(element){
+					element.addClass('dragged');
+				},
+				onComplete: function(element){
+					//element.removeClass('dragged');
+					var serialized = this.serialize()
+					//console.log(serialized)
+					new Request({
+						method: 'put',
+						url: embed_many.get('data-sort-url')
+					}).send({data: {order:serialized}});
+				}
+			});
+		});
+	};
 	var bodyCallback = function(){
 		window.fireEvent('bhfDomChunkReady', [document.body]);
 	};
