@@ -117,7 +117,7 @@ Turbolinks.pagesCached(0);
 			}
 		}
 		var embed_manies = parent.getElements('.sortable');
-		//addSortables(embed_manies)
+		addSortables(embed_manies)
 	};
 		
 	var scrollContent = function(){

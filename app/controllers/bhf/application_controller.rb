@@ -1,6 +1,6 @@
 class Bhf::ApplicationController < ActionController::Base
 
-  before_filter :init_time, :check_admin_account, :setup_current_account, :load_settings, :set_title, :set_areas
+  before_filter :init_time, :check_admin_account, :setup_current_account, :load_settings, :set_title, :set_areas, :set_locale
 
   helper_method :current_account
   layout 'bhf/application'
@@ -101,4 +101,15 @@ class Bhf::ApplicationController < ActionController::Base
       redirect_to(params[:return_to] || default, flash: msg)
     end
 
+    def set_locale
+      I18n.locale = params[:locale] || I18n.default_locale
+    end
+
+    def with_format(format, &block)
+      old_formats = formats
+      self.formats = [format]
+      block_value = block.call
+      self.formats = old_formats
+      return block_value
+    end
 end
