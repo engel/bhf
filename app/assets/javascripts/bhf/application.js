@@ -129,7 +129,7 @@ Turbolinks.pagesCached(0);
 			quickEdit.holder.setStyle('padding-top', scroll);
 		});
 	};
-	
+
 	
 	window.addEvent('bhfDomChunkReady', function(mainScope){
 		
@@ -148,7 +148,7 @@ Turbolinks.pagesCached(0);
 		mainScope.getElements('.js_bhf_form').each(function(form){
 			jsForm.setup(form);
 		});
-		
+
 		var sharedQuickEditOptions = {
 			onFailure: function(){
 				ajaxNote.failure();
@@ -157,6 +157,8 @@ Turbolinks.pagesCached(0);
 				ajaxNote.loading();
 			},
 			onFormInjected: function(){
+				if (mainHolder)
+					mainHolder.hide()
 				scrollContent();
 				ajaxNote.success();
 			},
@@ -174,7 +176,18 @@ Turbolinks.pagesCached(0);
 
 		var platforms = mainScope.getElements('.platform');
 		var mainForm = mainScope.getElementById('main_form');
-		
+		var mainHolder
+		if(!mainHolder){
+			mainHolder = mainScope.getElement('#main')
+			if (mainHolder) {
+				mainHolder.hide = function () {
+					this.addClass('collapsed');
+				}
+				mainHolder.show = function () {
+					this.removeClass('collapsed');
+				}
+			}
+		}
 		mainScope.getElements('.quick_edit_select').addEvent('change', function(){
 			var parent = this.getParent('.quick_edit_block');
 			var optionElem = this.options[this.selectedIndex];
@@ -269,6 +282,9 @@ Turbolinks.pagesCached(0);
 			});
 		}
 		else if (mainForm) {
+
+
+
 			quickEditOptions = Object.merge({
 				onSuccessAndNext: function(){
 					var a = this.linkElem;
@@ -284,11 +300,16 @@ Turbolinks.pagesCached(0);
 					
 					editStack.removeAllStacks();
 					editStack.addEditBrick(quickEditOptions, holder.getElement('a'));
+				},
+				onClosed: function(){
+					editStack.removeStack();
+					mainHolder.show()
 				}
 			}, sharedQuickEditOptions);
 			
 			mainForm.addEvent('click:relay(.quick_edit)', function(e){
 				e.preventDefault();
+
 				editStack.removeAllStacks();
 				editStack.addEditBrick(quickEditOptions, this);
 			});
