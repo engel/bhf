@@ -157,8 +157,9 @@ Turbolinks.pagesCached(0);
 				ajaxNote.loading();
 			},
 			onFormInjected: function(){
-				if (mainHolder)
+				if (mainHolder) {
 					mainHolder.hide()
+				}
 				scrollContent();
 				ajaxNote.success();
 			},
@@ -302,7 +303,11 @@ Turbolinks.pagesCached(0);
 					editStack.addEditBrick(quickEditOptions, holder.getElement('a'));
 				},
 				onClosed: function(){
-					editStack.removeStack();
+					if(editStack.bricksArray.length>1){
+						editStack.removeAllStacks();
+					}else {
+						editStack.removeStack();
+					}
 					mainHolder.show()
 				}
 			}, sharedQuickEditOptions);
@@ -317,14 +322,14 @@ Turbolinks.pagesCached(0);
 		else if (mainScope.hasClass('quick_edit_holder')) {
 			quickEditOptions = Object.merge({
 				onClosed: function(){
-					editStack.removeStack();
+					//editStack.removeStack();
 				},
-				hideNext: true
+				hideNext: false
 			}, sharedQuickEditOptions);
 			
 			mainScope.addEvent('click:relay(.quick_edit)', function(e){
 				e.preventDefault();
-				editStack.addStack();
+				editStack.removeStack();
 				editStack.addEditBrick(quickEditOptions, this);
 			});
 		}
