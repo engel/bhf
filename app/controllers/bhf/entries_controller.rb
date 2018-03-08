@@ -139,6 +139,7 @@ class Bhf::EntriesController < Bhf::ApplicationController
 
     def load_object
       @object = @model.unscoped.find(params[:id]) rescue nil
+      @object = @model.find(params[:id]) rescue nil if @object.nil?
       after_load
     end
 
